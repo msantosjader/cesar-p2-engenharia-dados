@@ -1,7 +1,7 @@
 [project]
-name = "engenharia-dados"
+name = "cesar-p2-engenharia-dados"
 version = "0.1.0"
-description = "Add your description here"
+description = "Cesar School - Banco de Dados - 2o Período - Engenharia de Dados"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
