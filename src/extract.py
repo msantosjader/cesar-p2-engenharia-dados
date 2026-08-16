@@ -5,9 +5,17 @@ class Extract():
     def __init__(self):
         pass
 
-    def get_pnad(self):
-        url = "https://servicodados.ibge.gov.br/api/v3/agregados/4093/periodos/201201-202601/variaveis/4099?localidades=N3[26]&classificacao=2[all]"
-        req = requests.get(url)
-        data = req.json()
+    def get_pnad(self, url):
+        try:
+            req = requests.get(url)
+        except Exception as e:
+            print(f"❌ Erro realizando a consulta! URL: {url}\nErro: {e}")
+            raise
 
+        if req.status_code != 200:
+            print(f"❌ Erro na consulta! URL: {url}")
+            raise Exception(f"Código HTTP {req.status_code}")
+
+        data = req.json()
+        print(f"ℹ️ Consulta realizada com sucesso. URL: {url}")
         return data
