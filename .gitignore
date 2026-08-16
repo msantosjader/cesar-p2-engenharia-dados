@@ -11,3 +11,5 @@ wheels/
 
 # Arquivos gerados
 *.json
+saidas/*
+!saidas/.gitkeep
