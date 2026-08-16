@@ -4,6 +4,14 @@ class Load():
     def __init__(self):
         pass
 
-    def load_json(self, nome_doc, data):
-        with open(f"saidas/{nome_doc}.json", 'w', encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+    def load_json(self, nome_arquivo, data):
+        try :
+            arquivo = f"saidas/{nome_arquivo}.json"
+            with open(arquivo, 'w', encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+
+                print(f"ℹ️ JSON gearado: {arquivo}")
+
+        except Exception as e:
+            print(f"❌ Erro ao salvar o JSON: {e}")
+            raise
