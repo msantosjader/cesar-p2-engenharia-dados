@@ -1,4 +1,4 @@
-# César School — Banco de Dados (2º Período) — Engenharia de Dados
+# Cesar School — Banco de Dados (2º Período) — Engenharia de Dados
 
 Extração de dados da **PNAD Contínua (IBGE)** com Python e Programação Orientada a Objetos (POO).
 
