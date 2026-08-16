@@ -12,12 +12,12 @@ class CLI:
         sys.exit(0)
 
     def _perguntar(self, prompt, catalogo, usar_all=False):
-        opcoes = ", ".join(str(k) for k in catalogo)
+        opcoes = "\n  ".join(f"{k} - {nome}" for k, nome in catalogo.items())
         validos = {str(k) for k in catalogo}
         erros = 0
 
         while True:
-            resposta = input(f"{prompt}\n  Opções: {opcoes}\n> ").strip()
+            resposta = input(f"{prompt}\n  {opcoes}\n> ").strip()
 
             if resposta == "":
                 if usar_all:
@@ -35,7 +35,7 @@ class CLI:
                 if erros >= 3:
                     print("Muitas tentativas inválidas.")
                     self._encerrar()
-                print(f"Valor inválido: {', '.join(invalidos)}. Opções: {opcoes}")
+                print(f"Valor inválido: {', '.join(invalidos)}. Válidos: {', '.join(sorted(validos))}")
                 continue
 
             return ",".join(valores)
