@@ -6,23 +6,23 @@ from src.cli import CLI
 from src.extract import Extract
 from src.ibge import TABELAS_PNAD_PROJETO, QueryBuilder
 from src.load import Load
-from src.mongo import get_client, get_collection, get_database, ping
+from src.mongo import Mongo
 
 
 if __name__ == "__main__":
     modo = CLI().run()
 
     if modo == "pnad-projeto":
-        client = get_client()
+        mongo = Mongo()
         try:
-            ping(client)
+            mongo.ping()
             print("✅ Conectado ao MongoDB")
         except Exception as e:
             print(f"❌ Erro ao conectar no MongoDB: {e}")
             raise SystemExit(1)
 
-        db = get_database(client)
-        collection = get_collection(db)
+        db = mongo.get_database()
+        collection = mongo.get_collection(db)
         extractor = Extract()
         load = Load()
         qb = QueryBuilder()
@@ -39,7 +39,7 @@ if __name__ == "__main__":
             print(f"{n} docs upserted")
 
         print(f"\n✅ Execução finalizada. Total: {total} docs upserted")
-        client.close()
+        mongo.close()
     else:
         extractor = Extract()
         data = extractor.get_pnad(modo)
