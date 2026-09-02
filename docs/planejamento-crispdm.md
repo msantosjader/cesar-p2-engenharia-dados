@@ -14,120 +14,97 @@ O projeto tem como foco o monitoramento e controle de arboviroses, como dengue, 
 
 Atualmente, os dados provenientes das atividades de campo são armazenados e manipulados principalmente por meio de arquivos CSV e planilhas Excel. Os dados das Ovitrampas e das EDLs permanecem separados, fazendo com que analistas e gestores precisem realizar cruzamentos e tratamentos manualmente. Esse processo aumenta a carga de trabalho, dificulta a análise espacial e temporal e pode introduzir erros durante a manipulação dos dados.
 
-Além disso, o volume de dados e a necessidade de realizar cálculos espaciais tornam o uso de planilhas inadequado para determinadas operações. O cruzamento entre a localização das Ovitrampas e das EDLs pode exigir grande quantidade de cálculos de distância, resultando em lentidão e travamentos.
-
-Dessa forma, o projeto busca estruturar uma solução capaz de integrar os dados coletados em campo, permitir análises espaciais e temporais e fornecer informações que apoiem decisões mais rápidas e direcionadas pelas equipes responsáveis pelo controle do vetor.
+Além da limitação técnica do Excel para suportar operações de distância espacial, há uma lacuna na análise do contexto urbano. O controle vetorial ocorre no vácuo de variáveis socioambientais, ignorando como fatores de infraestrutura urbana afetam a eficácia das EDLs. Adicionalmente, pesquisas preliminares (Desk Research) apontam que dados entomológicos costumam apresentar o fenômeno estatístico da superdispersão (excesso de zeros e picos extremos), o que pode exigir abordagens analíticas mais robustas do que médias simples.
 
 ### 1.2 Pergunta de negócio
-O problema de negócio identificado é a dificuldade de transformar os dados coletados pelas Ovitrampas e pelas EDLs em informações integradas e úteis para a tomada de decisão operacional.
+O problema de negócio identificado é a dificuldade de transformar os dados coletados pelas Ovitrampas e EDLs em informações integradas, georreferenciadas e cruzadas com indicadores socioambientais para a tomada de decisão. 
 
-Atualmente, profissionais da GEVACZ dependem de processos manuais para combinar diferentes fontes de dados. Como consequência, a análise pode levar semanas, dificultando a identificação de regiões que necessitam de atenção e o direcionamento das equipes de campo.
-
-O projeto pretende, portanto, reduzir o esforço manual e o tempo necessário para analisar os dados, permitindo que os responsáveis pelo monitoramento tenham uma visão espacial e temporal mais integrada da situação.
+As perguntas que guiam este projeto são: 
+1. Como automatizar e otimizar o cruzamento espacial entre OVT e EDL para reduzir o tempo de resposta das equipes de campo?
+2. Como a variação temporal (ano a ano) nas condições de infraestrutura sanitária e vulnerabilidade social impacta a eficácia das ações de controle do vetor na cidade do Recife?
 
 ### 1.3 Público e uso pretendido
-A resposta será destinada principalmente aos analistas epidemiológicos, especialistas em geoprocessamento, supervisores distritais de saúde e Agentes de Saúde Ambiental (ASACEs) envolvidos no monitoramento e controle do Aedes aegypti. Esses profissionais foram identificados no Desk Research como os principais usuários afetados pelo processo atual.
+A resposta será destinada principalmente aos analistas epidemiológicos, especialistas em geoprocessamento, supervisores distritais de saúde e Agentes de Saúde Ambiental (ASACEs). 
 
 As informações deverão ser utilizadas para apoiar a tomada de decisão, permitindo:
 - identificar regiões com maior concentração ou aumento na quantidade de ovos;
-- acompanhar a evolução dos dados ao longo do tempo;
+- investigar possíveis correlações entre áreas de falha do larvicida e deficiências crônicas de infraestrutura sanitária;
 - analisar espacialmente a distribuição das Ovitrampas e EDLs;
-- avaliar possíveis relações entre a atuação das EDLs e a quantidade de ovos observada;
-- auxiliar no direcionamento das equipes que atuam em campo.
-
-O objetivo é substituir parte do processo atual, baseado no cruzamento manual de planilhas, por uma análise integrada capaz de gerar informações mais rápidas para os responsáveis pela operação. O Desk Research identifica justamente a ausência de uma ferramenta que realize automaticamente o cruzamento entre os dados das Ovitrampas e das EDLs.
+- auxiliar no direcionamento mais estratégico (Saúde Pública de Precisão) das equipes que atuam em campo.
 
 ### 1.4 Critérios de sucesso
-O principal critério de sucesso será verificar se a solução consegue reduzir o tempo necessário para transformar os dados coletados em informações úteis para a tomada de decisão e para o direcionamento das equipes de campo.
+O principal critério de sucesso será verificar se a solução consegue reduzir o tempo necessário para transformar os dados coletados em informações úteis para a tomada de decisão. Também será considerado sucesso a implementação de um pipeline de dados automatizado que integre com êxito os dados agregados de infraestrutura urbana como covariáveis de contexto, gerando um dataset pronto para testes estatísticos e visualizações dinâmicas.
 
-Também será considerado indicativo de sucesso que a solução permita integrar os dados das Ovitrampas e das EDLs e realizar análises espaciais e temporais de maneira mais eficiente do que o processo atual baseado em planilhas. O resultado deverá contribuir para reduzir o esforço manual dos analistas e fornecer informações que possam ser utilizadas para direcionar as ações de controle do vetor.
+---
 
 ## 2. Data Understanding
 
 ### 2.1 Quais agregados/variáveis do IBGE foram explorados
-Exploramos a PNAD Contínua, principalmente a Tabela 6469, que apresenta informações sobre o rendimento médio mensal das pessoas ocupadas. A intenção era utilizar esses dados como uma variável socioeconômica no projeto.
+Para entender o impacto do contexto urbano na proliferação do vetor, foram selecionadas tabelas estratégicas da PNAD Contínua Anual (Características Gerais dos Domicílios e dos Moradores) via API do SIDRA/IBGE. A tabela trimestral de emprego (6469) foi descartada para evitar ruído estatístico, priorizando variáveis estruturais:
+- **Eixo Saneamento e Água:** Tabelas 6731 (Fonte principal de água), 9468 (Rede geral de distribuição) e 7192 (Tipo de esgotamento sanitário). *Justificativa: Falhas no abastecimento forçam o armazenamento de água em recipientes (criadouros).*
+- **Eixo Resíduos Sólidos:** Tabelas 6736 (Destino do lixo) e 6738 (Disponibilidade de coleta). *Justificativa: Acúmulo de lixo retém água da chuva.*
+- **Eixo Adensamento e Estrutura:** Tabelas 6727 (Tipo de domicílio) e 6720 (Densidade de moradores).
+- **Eixo Socioeconômico:** Tabelas 6407 (População por sexo e idade) e 7401 (Rendimento médio domiciliar per capita). 
+
+*Nota metodológica: A seleção dessas variáveis baseia-se em premissas biológicas e achados do Desk Research. Um dos objetivos do projeto é testar a hipótese de que esses indicadores macro de saneamento e demografia têm impacto estatisticamente mensurável na eficácia das EDLs.*
+
 ### 2.2 Granularidade disponível (geográfica, temporal)
-A principal limitação encontrada foi a granularidade geográfica. Os dados da PNAD são disponibilizados em níveis mais agregados, como Brasil, Grandes Regiões e Estados, não permitindo representar diretamente o município do Recife ou seus bairros.
+O projeto trabalhará com a integração de duas granularidades distintas:
+- **Dados Primários (Micro):** Alta granularidade geográfica (coordenadas transformadas em células H3) e temporal (leituras a cada 15 dias para OVT e EDLs).
+- **Dados Secundários (Macro):** Granularidade geográfica a nível de Município (Recife, geocódigo 2611606) e temporal Anual (série histórica da PNAD de 2018 a 2024). Essa abordagem cria um "contexto de vulnerabilidade municipal" correlacionado às flutuações anuais do vetor.
 
-Apesar de a PNAD possuir informações ao longo do tempo, a escala geográfica disponível não atende ao objetivo do nosso estudo.
 ### 2.3 Problemas de qualidade identificados
-2.3 Problemas de qualidade identificados
+- **Risco de Superdispersão e Zeros Excedentes:** Baseado na literatura de controle de vetores, suspeita-se que os dados de contagem de ovos apresentem muitos valores zerados misturados a picos extremos. Esse comportamento precisará ser validado durante a análise exploratória.
+- **Distorção Espacial (MAUP):** O agrupamento atual de dados baseado nos limites oficiais dos bairros gera distorções analíticas que serão corrigidas com o uso da grade Uber H3.
+- **Valores Ausentes na API:** Variáveis com amostragem insuficiente podem retornar valores nulos ou marcadores de confidencialidade pela API do IBGE, exigindo tratamento.
 
-O problema identificado não está na qualidade dos dados, mas na inadequação da escala geográfica. Como nosso estudo é focado na cidade do Recife, utilizar dados referentes a Pernambuco não representaria as diferenças socioeconômicas existentes dentro do município.
-
-Por isso, decidimos buscar outras fontes de dados específicas para o Recife, principalmente aquelas disponibilizadas pelo Estado e pela Prefeitura, que apresentem uma granularidade mais adequada ao nosso estudo.
+---
 
 ## 3. Data Preparation
 
 ### 3.1 Tratamentos necessários
-Após a escolha das bases, será necessário realizar a padronização e integração dos dados. Para o Censo 2022, os dados de rendimento e demais variáveis socioeconômicas deverão ser tratados para garantir que os valores estejam em formatos numéricos e que não existam inconsistências ou duplicidades.
+- **Filtro de Variáveis de Ouro (API IBGE):** Para evitar multicolinearidade e ruído, o pipeline extrairá da API do SIDRA apenas as variáveis de "Distribuição percentual" e totais de referência, descartando ativamente todos os "Coeficientes de Variação" e "Erros Padrão". Também serão isoladas categorias específicas de risco (ex: % de lixo não coletado, % de uso de poços).
+- **Indexação Espacial:** Substituição da métrica de bairros pela malha hexagonal H3 da Uber (resolução 8 ou 9), transformando as coordenadas em índices para otimizar os cruzamentos relacionais.
+- **Integração das Bases:** Os dados operacionais de campo serão agregados temporalmente para permitir a junção relacional com a tabela de contexto macro (PNAD Anual).
 
-Também será necessário realizar o tratamento dos dados espaciais, verificando os sistemas de coordenadas e garantindo que as geometrias estejam corretas para o cruzamento com a grade H3.
-
-Em seguida, os dados socioeconômicos serão relacionados espacialmente às células H3 utilizadas no projeto. Também serão tratados valores ausentes e possíveis inconsistências, além de serem criadas as variáveis necessárias para a etapa de modelagem.
+---
 
 ## 4. Modeling
 
 ### 4.1 Formato final
-O conjunto final deverá ser estruturado de forma que cada registro represente uma célula H3 em um determinado período de análise.
+O formato final será modelado em uma estrutura relacional (ex: PostgreSQL + PostGIS), separando os dados operacionais microespaciais dos dados contextuais macro. 
 
-As variáveis poderão incluir informações como:
+A estrutura lógica do dataset final unificado seguirá este padrão analítico:
 
-quantidade de OVTs;
-presença ou quantidade de EDLs;
-distância até EDLs;
-rendimento da área;
-população;
-variáveis ambientais, como chuva;
-período de análise;
-outras variáveis de controle definidas durante o projeto.
-Dessa forma, a base final terá uma estrutura semelhante a:
+| H3_Index | Ano/Mês | OVT_Contagem | EDL_Presença | Bairro_Aprox | Rendimento_Anual_Mun | Perc_Lixo_Inadequado_Mun |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 88a810... | 2024-03 | 145 | Sim | Casa Amarela | R$ 2.450 | 12.5% |
+| 88a810... | 2024-03 | 0 | Sim | Casa Amarela | R$ 2.450 | 12.5% |
+| 88a811... | 2024-03 | 320 | Não | Dois Irmãos | R$ 2.450 | 12.5% |
 
-| H3     | Período  | OVTs | EDLs | Rendimento | População | Chuva |
-| ------ | -------- | ---: | ---: | ---------: | --------: | ----: |
-| H3_001 | Jan/2025 |   12 |    2 |      2.500 |     1.200 |   180 |
-| H3_002 | Jan/2025 |    7 |    0 |      4.100 |       950 |   180 |
-| H3_001 | Fev/2025 |   15 |    2 |      2.500 |     1.200 |   220 |
+*Nota: Este formato preparará o dataset para testes estatísticos iniciais. O objetivo é permitir que a equipe valide a presença de superdispersão nos dados reais e cruze as métricas entomológicas com as covariáveis da PNAD, testando se os fatores de vulnerabilidade explicam as variações na eficácia do larvicida.*
 
-Essa estrutura permitirá posteriormente aplicar o modelo estatístico escolhido pelo grupo, considerando tanto a dimensão espacial quanto temporal dos dados.
+---
 
 ## 5. Evaluation
 
 ### 5.1 Critérios que o grupo usará para considerar os dados "prontos"
 Os dados serão considerados prontos quando atenderem aos seguintes critérios:
+- **Performance de Cruzamento:** A consulta espacial cruzando OVTs e EDLs deve retornar resultados via índice H3 sem os travamentos experimentados no Excel.
+- **Cobertura e Consistência:** A tabela dimensional da PNAD deve estar populada com a série histórica, e a soma total de armadilhas no banco deve bater com os registros originais da GEVACZ.
+- **Tratamento de Ausentes:** Valores suprimidos da API ou falhas de leitura de campo devem estar mapeados e tratados (imputação ou descarte justificado).
 
-Cobertura espacial: todos os registros deverão estar corretamente associados às células H3 do território analisado.
-Cobertura temporal: os períodos necessários para a análise deverão estar disponíveis e padronizados.
-Consistência: não deverão existir duplicidades ou valores incompatíveis entre as diferentes bases.
-Dados ausentes: valores ausentes deverão estar identificados e tratados de acordo com sua importância para cada variável.
-Integração: as diferentes fontes deverão estar corretamente relacionadas por meio das informações espaciais e temporais.
-Validação: os resultados dos cruzamentos espaciais deverão ser verificados para evitar associações incorretas entre bairros, setores censitários e células H3.
-
-Assim, o conjunto será considerado pronto quando apresentar dados consistentes, integrados e suficientemente completos para a aplicação do modelo.
+---
 
 ## 6. Deployment
 
-### 6.1 Como o pipeline deverá rodar de forma recorrente; como o código será versionado
-O pipeline deverá ser organizado em etapas, permitindo que os dados sejam processados novamente sempre que uma nova atualização das bases estiver disponível.
+### 6.1 Como o pipeline deverá rodar de forma recorrente e versionamento
+O pipeline deverá ser organizado em etapas automatizadas e versionado utilizando **Git/GitHub**, mantendo as diferentes versões dos scripts (extração, limpeza, formatação).
 
-A estrutura prevista será:
+A estrutura de execução prevista será:
 
-Dados brutos
-     ↓
-Limpeza e padronização
-     ↓
-Tratamento espacial
-     ↓
-Integração das bases
-     ↓
-Agregação para H3
-     ↓
-Base final
-     ↓
-Modelagem
-     ↓
-Resultados
+1. **Ingestão (Extract):** Scripts conectam-se à API do SIDRA (IBGE) e recebem os CSVs das OVTs/EDLs.
+2. **Transformação (Transform):** Limpeza, filtro percentual, e conversão de LAT/LONG para H3.
+3. **Carga (Load):** Inserção no banco de dados relacional e geração da base final.
 
-O código será versionado utilizando Git, mantendo as diferentes versões dos scripts e registrando as alterações realizadas durante o desenvolvimento. Os dados brutos não deverão ser modificados diretamente, permitindo que o pipeline seja reproduzido a partir das fontes originais.
-
-Sempre que uma nova versão dos dados for disponibilizada, o pipeline poderá ser executado novamente para gerar uma nova versão da base final e dos resultados.
+Para a orquestração recorrente, o grupo avaliará o uso de ferramentas de CI/CD (ex: GitHub Actions) ou funções em nuvem (*serverless*), permitindo que os dados sejam reprocessados automaticamente sempre que novos ciclos de leitura quinzenais ou atualizações anuais da PNAD estiverem disponíveis, sem alterar os dados brutos originais.
