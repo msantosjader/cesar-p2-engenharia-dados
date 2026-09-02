@@ -5,5 +5,7 @@ description = "Cesar School - Banco de Dados - 2o Período - Engenharia de Dados
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "pymongo[srv]>=4.17.0",
+    "python-dotenv>=1.2.3",
     "requests>=2.34.2",
 ]
