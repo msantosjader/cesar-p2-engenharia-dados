@@ -1,4 +1,6 @@
 import json
+from datetime import datetime, timezone
+
 
 class Load():
     def __init__(self):
@@ -15,3 +17,15 @@ class Load():
         except Exception as e:
             print(f"❌ Erro ao salvar o JSON: {e}")
             raise
+
+    def load_mongo(self, collection, data, tabela_id):
+        result = collection.update_one(
+            {"tabela": tabela_id},
+            {"$set": {
+                "tabela": tabela_id,
+                "dados": data,
+                "inserted_at": datetime.now(timezone.utc),
+            }},
+            upsert=True,
+        )
+        return 1 if result.upserted_id or result.modified_count else 0

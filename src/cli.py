@@ -41,8 +41,25 @@ class CLI:
             return ",".join(valores)
 
     def run(self):
-        print("QueryBuilder IBGE PNAD para a Atividade 1")
-        print()
+        print("Escolha o modo de execução:")
+        print("  1 - Atividade1 (4093 → JSON)")
+        print("  2 - pnad-projeto (→ MongoDB)")
+        print("  0 - Sair")
+
+        while True:
+            opcao = input("> ").strip()
+            if opcao == "0":
+                self._encerrar()
+            if opcao in ("1", "2"):
+                break
+            print("Opção inválida.")
+
+        if opcao == "1":
+            return self._run_atividade1()
+        return "pnad-projeto"
+
+    def _run_atividade1(self):
+        print("\nQueryBuilder IBGE PNAD para a Atividade 1\n")
 
         variaveis = self._perguntar(
             "Escolha as variáveis (ENTER = todas, 0 = sair):", VARIAVEIS
@@ -54,6 +71,4 @@ class CLI:
             "Escolha a UF (ENTER = todas, 0 = sair):", UFS, usar_all=True
         )
 
-        url = self.qb.montar_url(variaveis, sexo, ufs)
-
-        return url
+        return self.qb.montar_url(variaveis, sexo, ufs)

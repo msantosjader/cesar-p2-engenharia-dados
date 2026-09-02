@@ -41,17 +41,26 @@ O principal critério de sucesso será verificar se a solução consegue reduzir
 
 ### 2.1 Quais agregados/variáveis do IBGE foram explorados
 Para entender o impacto do contexto urbano na proliferação do vetor, foram selecionadas tabelas estratégicas da PNAD Contínua Anual (Características Gerais dos Domicílios e dos Moradores) via API do SIDRA/IBGE. A tabela trimestral de emprego (6469) foi descartada para evitar ruído estatístico, priorizando variáveis estruturais:
-- **Eixo Saneamento e Água:** Tabelas 6731 (Fonte principal de água), 9468 (Rede geral de distribuição) e 7192 (Tipo de esgotamento sanitário). *Justificativa: Falhas no abastecimento forçam o armazenamento de água em recipientes (criadouros).*
-- **Eixo Resíduos Sólidos:** Tabelas 6736 (Destino do lixo) e 6738 (Disponibilidade de coleta). *Justificativa: Acúmulo de lixo retém água da chuva.*
-- **Eixo Adensamento e Estrutura:** Tabelas 6727 (Tipo de domicílio) e 6720 (Densidade de moradores).
-- **Eixo Socioeconômico:** Tabelas 6407 (População por sexo e idade) e 7401 (Rendimento médio domiciliar per capita). 
+
+- **Eixo Saneamento e Água:**
+  - Tabela **9468** — Rede geral de distribuição de água (resumo: % de domicílios e % de moradores com rede geral). *Justificativa: Falhas no abastecimento de água potável forçam o armazenamento em recipientes abertos, criando criadouros ideais para o Aedes aegypti.*
+  - Tabela **6732** — Disponibilidade da rede geral de água (diária, 4 a 6 dias, 1 a 3 dias na semana). *Justificativa: Racionamento prolongado aumenta o volume de água armazenada e o tempo de exposição larval em domicílios.*
+  - Tabela **7192** — Tipo de esgotamento sanitário (rede geral, fossa séptica ligada/não ligada à rede, outro tipo). *Justificativa: Deficiências no esgotamento sanitário geram focos de água parada e risco de contaminação, além de indicar fragilidade da infraestrutura urbana.*
+
+- **Eixo Resíduos Sólidos:**
+  - Tabela **6736** — Destino do lixo (coleta direta, coleta em caçamba, queimado, outro destino). *Justificativa: Acúmulo de resíduos sólidos retém água da chuva, funcionando como criadouros alternativos para o vetor.*
+
+- **Eixo Adensamento e Estrutura:**
+  - Tabela **6820** — Tipo de domicílio (casa, apartamento, habitação em cômodos/cortiço). *Justificativa: O tipo de construção influencia a exposição vetorial e a vulnerabilidade social dos moradores.*
+  - Tabela **6678** — Número de moradores por domicílio (1, 2, 3, 4, 5, 6 ou mais). *Justificativa: Densidade ocupacional elevada por domicílio aumenta a probabilidade de infestação e dificulta medidas de controle individual.*
+  - Tabela **6578** — Número médio de moradores por domicílio. *Justificativa: Indicador sintético de densidade demográfica local, complementar à distribuição da tabela 6678.*
 
 *Nota metodológica: A seleção dessas variáveis baseia-se em premissas biológicas e achados do Desk Research. Um dos objetivos do projeto é testar a hipótese de que esses indicadores macro de saneamento e demografia têm impacto estatisticamente mensurável na eficácia das EDLs.*
 
 ### 2.2 Granularidade disponível (geográfica, temporal)
 O projeto trabalhará com a integração de duas granularidades distintas:
 - **Dados Primários (Micro):** Alta granularidade geográfica (coordenadas transformadas em células H3) e temporal (leituras a cada 15 dias para OVT e EDLs).
-- **Dados Secundários (Macro):** Granularidade geográfica a nível de Município (Recife, geocódigo 2611606) e temporal Anual (série histórica da PNAD de 2018 a 2024). Essa abordagem cria um "contexto de vulnerabilidade municipal" correlacionado às flutuações anuais do vetor.
+- **Dados Secundários (Macro):** Granularidade geográfica a nível de Município (Recife, geocódigo 2611606) e temporal Anual (série histórica da PNAD de 2016 a 2025, com exceção da tabela 7192 que inicia em 2019). Essa abordagem cria um "contexto de vulnerabilidade municipal" correlacionado às flutuações anuais do vetor.
 
 ### 2.3 Problemas de qualidade identificados
 - **Risco de Superdispersão e Zeros Excedentes:** Baseado na literatura de controle de vetores, suspeita-se que os dados de contagem de ovos apresentem muitos valores zerados misturados a picos extremos. Esse comportamento precisará ser validado durante a análise exploratória.
