@@ -17,10 +17,10 @@ class Mongo:
     def ping(self):
         self.client.admin.command("ping")
 
-    def get_database(self, name="pnad"):
+    def get_database(self, name="ibge"):
         return self.client[name]
 
-    def get_collection(self, db, name="pnad_projeto"):
+    def get_collection(self, db, name="pnadc"):
         coll = db[name]
         coll.create_index([("tabela", 1)], name="idx_tabela")
         return coll
