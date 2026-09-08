@@ -1,5 +1,6 @@
 from src.cli import CLI
 from src.extract import Extract
+from src.ibge import TABELAS_PNAD_PROJETO, QueryBuilder
 from src.load import Load
 
 def run_pipeline():
