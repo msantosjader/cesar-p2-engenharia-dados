@@ -2,6 +2,28 @@
 
 Extração de dados da **PNAD Contínua (IBGE)** com Python e Programação Orientada a Objetos (POO).
 
+## Atualização — aulas 08 a 10
+
+A nova ETL opt-in acrescenta Bronze identificado por execução, transformação
+pandas/PySpark, carga idempotente PostgreSQL/Neon e orquestração Prefect.
+Os modos anteriores continuam disponíveis em `main.py`.
+
+Consulte [integração, configuração, testes e limitações](docs/evolucao-aulas-08-10.md).
+O DDL em [docs/sql/pnad_silver.sql](docs/sql/pnad_silver.sql) é uma proposta para
+revisão; nenhum recurso externo é criado automaticamente.
+
+```bash
+uv sync --frozen --all-extras
+uv run --frozen --all-extras pytest -q
+uv run --frozen python run_project.py --print-ddl
+```
+
+**Nota sobre o histórico abaixo:** no código anterior à atualização, a opção 1 já
+gravava no MongoDB, embora o menu anunciasse JSON. Esse destino foi preservado.
+A opção 2 foi conectada às sete consultas existentes; no fluxo legado a escrita
+continua sendo inserção simples. A nova ETL possui entrada separada, descrita no
+documento de evolução.
+
 Este documento descreve o estado atual da solução (tag `atividade_1`): extração da PNAD Contínua (Tabela 4093), parametrizável por variável, sexo e UF.
 
 ## Evolução

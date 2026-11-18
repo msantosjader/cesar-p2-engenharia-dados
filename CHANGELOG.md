@@ -1,5 +1,33 @@
 # Changelog
 
+## [feature/foundation] — 2026-11-18
+
+### Corrigido
+- Encadeamento do modo `pnad-projeto` em `main.py`, reutilizando as sete consultas existentes.
+- Fechamento do cliente `Load` após execução ou falha.
+- Instalação base consistente entre `pyproject.toml`, `uv.lock` e `requirements.txt`.
+
+### Adicionado — Aula 08
+- Snapshots Bronze por execução em coleção separada, hashes e leitura de carga completa.
+- Transformação longa preservando variáveis, localidades, categorias, períodos e valores originais.
+- Distinção entre zero absoluto e valores ausentes/suprimidos conforme convenções IBGE.
+- PostgreSQL configurável com TLS remoto, validação de schema, upsert transacional e releitura.
+- Entrada `run_project.py` e geração de DDL para revisão, sem aplicação automática.
+
+### Adicionado — Aula 09
+- Flow e tasks Prefect reutilizando os serviços da ETL, com logs e retries limitados.
+- Recusa de carga parcial e confirmação explícita de escritas na nova entrada.
+
+### Adicionado — Aula 10
+- Transformação PySpark com o mesmo contrato Silver do pandas e coleta local limitada.
+- Testes de equivalência DataFrame/Spark SQL e integração com PostgreSQL local.
+
+### Validação e documentação
+- Testes de regressão, integridade, idempotência, transações e orquestração local.
+- Validação pública das sete consultas IBGE e posterior validação autorizada de
+  escrita no Atlas/Neon; evidências em `docs/validacao-integracao-atlas-neon.md`.
+- Detalhes e limitações em `docs/evolucao-aulas-08-10.md`.
+
 ## [pnad-projeto] — 2026-09-02
 
 ### Adicionado

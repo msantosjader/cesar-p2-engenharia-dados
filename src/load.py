@@ -18,6 +18,9 @@ class Load:
         # 2. Inicializa o cliente do MongoDB de forma segura
         self.client = MongoClient(self.uri, server_api=ServerApi('1'))
 
+    def close(self):
+        self.client.close()
+
     def save_to_mongodb(self, db_name: str, collection_name: str, data):
         """
         Recebe o JSON extraído e envia para o MongoDB Atlas.
